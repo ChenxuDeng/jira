@@ -4,7 +4,11 @@ import List from "./list";
 import qs from 'qs'
 import {cleanObject, useDidMount, useDebounce} from "../../utilities";
 
-function ProjectList(props) {
+interface props{
+
+}
+
+const ProjectList:React.FC<props>=(props)=>{
     const [param,setParam]=useState({
         name:'',
         personId:''
@@ -12,7 +16,7 @@ function ProjectList(props) {
     const [user,setUser]=useState([])
     const [list,setList]=useState([])
 
-    const debouncedParam=useDebounce(param,1000) //在delay的时间后debounceParam才会变触发useEffect达到防抖的目的
+    const debouncedParam=useDebounce(param,200) //在delay的时间后debounceParam才会变触发useEffect达到防抖的目的
 
     useEffect(() => {
         //http://localhost:3001/projects?name=${param.name}&personId=${param.personId}
@@ -23,6 +27,7 @@ function ProjectList(props) {
         })
     }, [debouncedParam]) //在delay的时间后debounceParam才会变触发useEffect达到防抖的目的
 
+    // @ts-ignore
     useDidMount(()=>{
         fetch('http://localhost:3001/users').then(async (response)=>{
             if(response.ok){

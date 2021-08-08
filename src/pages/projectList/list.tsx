@@ -1,6 +1,11 @@
 import React from 'react';
 
-function List(props) {
+interface props{
+    list:{id:number,name:string,personId:number,organization:string,created:number}[]
+    user:{id:number,name:string}[]
+}
+
+const List:React.FC<props>=(props)=>{
     return (
         <table>
             <thead>

@@ -1,29 +1,32 @@
 //处理0的情况,因为不希望把0的情况也删除
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
-export const isFalsy=(value)=>{
+export const isFalsy=(value:unknown)=>{
     return value===0?false:!value //两个叹号可以把value转化为boolean
 }
 
 //把对象中的空值删除
-export function cleanObject(obj) {
+export function cleanObject(obj:object) {
+    // @ts-ignore
     const result={...obj}
     Object.keys(result).forEach((key)=>{
+        // @ts-ignore
         const value=result[key]
         if(isFalsy(value)){
+            // @ts-ignore
             delete result[key]
         } //如果value为null undefined则删除
     })
     return result
 }
 
-export const useDidMount=(fn)=>{
+export const useDidMount=(fn:()=>void)=>{
     useEffect(()=>{
         fn()
     },[])
 }
 
-export const useDebounce=(value,delay)=>{
+export const useDebounce=<V>(value:V, delay?:number)=>{
     const [debouncedValue,setDebouncedValue]=useState(value)
     useEffect(()=>{
         //在每次value变化后设置定时器
@@ -37,3 +40,22 @@ export const useDebounce=(value,delay)=>{
     },[value,delay])
     return debouncedValue
 }
+
+export const useArray =<T>(persons:T[]) => {
+    const [value,setValue]=useState(persons)
+    const add=(item:T)=>{
+        setValue([
+            ...value,
+            item
+        ])
+    }
+    const removeIndex=(index:number)=>{
+        const copy=[...value]
+        copy.splice(index,1)
+        setValue(copy)
+    }
+    const clear=()=>{
+        setValue([])
+    }
+    return {value,add,removeIndex,clear}
+};

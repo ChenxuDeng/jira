@@ -1,6 +1,12 @@
 import React, {useState,useEffect} from 'react';
 
-function SearchPanel(props) {
+interface props{
+    user:{id:number,name:string}[]
+    param:{name:string,personId:string}
+    setParam:(param:props['param'])=>void
+}
+
+const SearchPanel:React.FC<props>=(props)=>{
     return (
         <form>
             <div>
