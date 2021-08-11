@@ -3,6 +3,7 @@ import SearchPanel from "./searchPanel";
 import List from "./list";
 import qs from 'qs'
 import {cleanObject, useDidMount, useDebounce} from "../../utilities";
+import {useHttp} from "../../utilities/http";
 
 interface props{
 
@@ -15,25 +16,18 @@ const ProjectList:React.FC<props>=(props)=>{
     })
     const [user,setUser]=useState([])
     const [list,setList]=useState([])
+    const client=useHttp()
 
     const debouncedParam=useDebounce(param,200) //在delay的时间后debounceParam才会变触发useEffect达到防抖的目的
 
     useEffect(() => {
         //http://localhost:3001/projects?name=${param.name}&personId=${param.personId}
-        fetch(`http://localhost:3001/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async (response)=>{
-            if(response.ok){
-                setList(await response.json())
-            }
-        })
+        client('projects',{data:cleanObject(debouncedParam)}).then(setList)
     }, [debouncedParam]) //在delay的时间后debounceParam才会变触发useEffect达到防抖的目的
 
     // @ts-ignore
     useDidMount(()=>{
-        fetch('http://localhost:3001/users').then(async (response)=>{
-            if(response.ok){
-                setUser(await response.json())
-            }
-        })
+        client('users').then(setUser)
     })
 
     return (

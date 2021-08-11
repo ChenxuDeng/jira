@@ -2,7 +2,7 @@ import React from 'react'
 import ProjectList from "./pages/projectList";
 import {useAuth} from "./context/authContext";
 
-export const Authentivated=()=>{
+export const Authenticated=()=>{
     const {logout}=useAuth()
     return (
         <div>

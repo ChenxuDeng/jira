@@ -1,9 +1,21 @@
 import React, {ReactNode, useContext, useState} from 'react'
 import * as auth from '../authProvider'
+import {http} from "../utilities/http";
+import {useDidMount} from "../utilities";
 
 interface props{
     username:string,
     password:string
+}
+
+const bootstrapUser=async ()=>{
+    let user=null
+    const token=auth.getToken()
+    if(token){
+        const data=await http('me',{token})
+        user=data.user
+    }
+    return user
 }
 
 const AuthContext=React.createContext<{
@@ -32,6 +44,10 @@ export const AuthProvider=({children}:{children:ReactNode})=>{
             setUser(null)
         })
     }
+
+    useDidMount(()=>{
+        bootstrapUser().then(setUser)
+    })
 
     return (
         <AuthContext.Provider children={children} value={{user,login,register,logout}}/>

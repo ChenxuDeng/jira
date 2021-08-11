@@ -1,17 +1,18 @@
 import React from 'react'
 import qs from 'qs'
 import * as auth from '../authProvider'
+import {useAuth} from "../context/authContext";
 
 interface Config extends RequestInit{
-    token:string
-    data:object
+    token?:string
+    data?:object
 }
 
-export const http=async (endpoint:string,{data,token,headers,...customConfig}:Config)=>{
+export const http=async (endpoint:string,{data,token,headers,...customConfig}:Config={})=>{
     const config={
         method:'GET',
         headers:{
-            Authorization:token?`Bearer${token}`:'',
+            Authorization:token?`Bearer ${token}`:'',
             'Content-Type':data?'application/json':''
         },
         ...customConfig
@@ -23,8 +24,8 @@ export const http=async (endpoint:string,{data,token,headers,...customConfig}:Co
     }
     return window.fetch(`http://localhost:3001/${endpoint}`,config).then(async (response)=>{
         if(response.status===401){
-            await auth.logout()
-            window.location.reload()
+            //await auth.logout()
+            //window.location.reload()
             return Promise.reject({message:'请重新登陆'})
         }
         const data=await response.json()
@@ -34,4 +35,10 @@ export const http=async (endpoint:string,{data,token,headers,...customConfig}:Co
             return Promise.reject(data)
         }
     })
+}
+
+export const useHttp=()=>{
+    const {user}=useAuth()
+    return (...[endPoint,config]:Parameters<typeof http>)=>
+        http(endPoint,{...config,token:user?.token})
 }
