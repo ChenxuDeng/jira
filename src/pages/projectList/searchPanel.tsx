@@ -1,4 +1,5 @@
 import React, {useState,useEffect} from 'react';
+import {Input,Select} from "antd";
 
 interface props{
     user:{id:number,name:string}[]
@@ -10,27 +11,27 @@ const SearchPanel:React.FC<props>=(props)=>{
     return (
         <form>
             <div>
-                <input type="text" value={props.param.name} onChange={(event)=>{
+                <Input type="text" value={props.param.name} onChange={(event)=>{
                     return props.setParam({
                         ...props.param,
                         name:event.target.value
                     })
                 }}/>
-                <select value={props.param.personId} onChange={(event)=>{
+                <Select value={props.param.personId} onChange={(value)=>{
                     return props.setParam({
                         ...props.param,
-                        personId: event.target.value
+                        personId: value
                     })
                 }}>
-                    <option value="">负责人</option>
+                    <Select.Option value="">负责人</Select.Option>
                     {
                         props.user.map((item)=>{
-                            return <option value={item.id} key={item.id}>
+                            return <Select.Option value={item.id} key={item.id}>
                                 {item.name}
-                            </option>
+                            </Select.Option>
                         })
                     }
-                </select>
+                </Select>
             </div>
         </form>
     );
